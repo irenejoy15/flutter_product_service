@@ -5,11 +5,36 @@ service: productService
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs24.x
+  # "region" specifies the AWS region where your service will be deployed.
+  # STEP 2
+  environment:
+    BUCKET_NAME: products-images-irenejoy21-dev-12-new
+    DYNAMODB_TABLE: Products
+  # END STEP 2
   # Uncomment to easily set up a custom domain. Read the docs for more details:
   # https://www.serverless.com/framework/docs/providers/aws/guide/domains
   # domain: api.example.com
 
+# STEP 1
+resources:
+  Resources:
+    ProductImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: products-images-irenejoy21-dev-12-new 
+    ProductTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Products
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S #string
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH #partition key
+# END STEP ONE
 functions:
   hello:
     handler: handler.hello
