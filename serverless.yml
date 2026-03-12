@@ -12,6 +12,19 @@ provider:
     BUCKET_NAME: products-images-irenejoy21-dev-12-new
     DYNAMODB_TABLE: Products
   # END STEP 2
+  # STEP 4
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:PutItem'
+      Resource: arn:aws:dynamodb:us-east-1:660880134927:table/Products
+  # STEP 5
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+      Resource: arn:aws:s3:::products-images-irenejoy21-dev-12-new/*
+  #  END STEP 5
+  # END STEP 4 
   # Uncomment to easily set up a custom domain. Read the docs for more details:
   # https://www.serverless.com/framework/docs/providers/aws/guide/domains
   # domain: api.example.com

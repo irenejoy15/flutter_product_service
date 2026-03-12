@@ -17,8 +17,8 @@ const dynamoDBClient = new DynamoDBClient({region: 'us-east-1'});
 exports.getUploadUrl = async (event) => {
     try{
         const bucketName = process.env.BUCKET_NAME;
-        const {fileName, fileType, productName, productPrice, description, quantity, cateegory, email} = JSON.parse(event.body);
-        if(!fileName || !fileType || !productName || !productPrice || !description || !quantity || !cateegory || !email){
+        const {fileName, fileType, productName, productPrice, description, quantity, category, email} = JSON.parse(event.body);
+        if(!fileName || !fileType || !productName || !productPrice || !description || !quantity || !category || !email){
             return {
                 statusCode: 400,
                 body: JSON.stringify({error: 'ALL FIELDS ARE REQUIRED'}),
