@@ -38,12 +38,11 @@ exports.getUploadUrl = async (event) => {
                 id: { S: productId },
                 fileName : { S: fileName },
                 productName: { S: productName },
+                category: { S: category },
                 productPrice: { N: productPrice.toString() },
                 description: { S: description },
                 quantity: { N: quantity.toString() },
-                category: { S: category },
                 email: { S: email },
-                imageUrl: { S: signedUrl },
                 isApproved: { BOOL: false },
                 createdAt: { S: new Date().toISOString() },
             }

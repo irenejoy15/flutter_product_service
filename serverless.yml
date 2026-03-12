@@ -82,7 +82,7 @@ functions:
     events:
       - s3:
           bucket: products-images-irenejoy21-dev-12-new
-          event: s3:ObjectCreated:Put
+          event: s3:ObjectCreated:*
           existing: true
   cleanupProducts:
     handler: handlers/cleanupProducts.cleanupProducts
@@ -91,3 +91,10 @@ functions:
           rate: rate(2 minutes)
           enabled: true
 # END STEP 8
+  checkProductImage:
+    handler: handlers/checkProductImage.checkProductImage
+    events:
+      - httpApi:
+          path: /check-product-image
+          method: get
+

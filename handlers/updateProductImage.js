@@ -19,9 +19,9 @@ exports.updateProductImage = async (event) => {
 
         // FIND THE PRODUCT ID IN DYNAMODB TABLE USING THE FILE NAME
         const scanCommand = new ScanCommand({
-            tableName: tableName,
-            filterExpression: 'fileName = :fileName',
-            expressionAttributeValues: {
+            TableName: tableName,
+            FilterExpression: 'fileName = :fileName',
+            ExpressionAttributeValues: {
                 ':fileName': { S: fileName },
             },
         });
