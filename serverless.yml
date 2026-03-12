@@ -36,9 +36,11 @@ resources:
             KeyType: HASH #partition key
 # END STEP ONE
 functions:
-  hello:
-    handler: handler.hello
+# STEP 3
+  getUploadUrl:
+    handler: handlers/getUploadUrl.getUploadUrl
     events:
       - httpApi:
-          path: /
-          method: get
+          path: /upload-url
+          method: post
+# END STEP 3
