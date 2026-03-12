@@ -17,6 +17,10 @@ provider:
     - Effect: 'Allow'
       Action:
         - 'dynamodb:PutItem'
+        # STEP 7
+        - 'dynamodb:UpdateItem'
+        - 'dynamodb:Scan'
+        # END STEP 7
       Resource: arn:aws:dynamodb:us-east-1:660880134927:table/Products
   # STEP 5
     - Effect: 'Allow'
@@ -57,3 +61,12 @@ functions:
           path: /upload-url
           method: post
 # END STEP 3
+# STEP 8
+  updateProductImage:
+    handler: handlers/updateProductImage.updateProductImage
+    events:
+      - s3:
+          bucket: products-images-irenejoy21-dev-12-new
+          event: s3:ObjectCreated:Put
+          existing: true
+# END STEP 8
