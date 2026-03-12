@@ -11,6 +11,9 @@ provider:
   environment:
     BUCKET_NAME: products-images-irenejoy21-dev-12-new
     DYNAMODB_TABLE: Products
+    # STEP 9
+    SNS_TOPIC_ARN: arn:aws:sns:us-east-1:660880134927:Product-cleanup-topic
+    # END STEP 9
   # END STEP 2
   # STEP 4
   iamRoleStatements:
@@ -51,7 +54,19 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH #partition key
-# END STEP ONE
+# STEP 9
+    ProductCleanupTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: Product-cleanup-topic
+    ProductCleanupSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: arn:aws:sns:us-east-1:660880134927:Product-cleanup-topic
+        Protocol: email
+        Endpoint: cefriantrinchera21@gmail.com
+# END STEP 9
+# END STEP 1
 functions:
 # STEP 3
   getUploadUrl:
@@ -69,4 +84,10 @@ functions:
           bucket: products-images-irenejoy21-dev-12-new
           event: s3:ObjectCreated:Put
           existing: true
+  cleanupProducts:
+    handler: handlers/cleanupProducts.cleanupProducts
+    events:
+      - schedule:
+          rate: rate(2 minutes)
+          enabled: true
 # END STEP 8

@@ -1,0 +1,77 @@
+// STEP 9
+const {DynamoDBClient, ScanCommand, DeleteItemCommand} = require('@aws-sdk/client-dynamodb');
+const {SNSClient, PublishCommand} = require('@aws-sdk/client-sns');
+
+const snsClient = new SNSClient({region: 'us-east-1'});
+const dynamoDBClient = new DynamoDBClient({region: 'us-east-1'});
+
+//DEFINE CLEAN UP FUNCTION 
+exports.cleanupProducts = async () => {
+    try{
+        // Get DynamoDN Table name from environment variable
+        const tableName = process.env.DYNAMODB_TABLE;
+        const snsTopicArn = process.env.SNS_TOPIC_ARN;
+        //Calculate timestamp for one hour ago (Filter Outdated Categories)
+
+        const oneHourAgo = new Date(Date.now()- 10 *60*1000).toISOString();
+
+        //Scan DynamoDB for categories created before one hour ago
+        //Older One Hour Ago
+        //Do not have imageUrlField
+        const scanCommand = new ScanCommand({
+            TableName: tableName,
+            FilterExpression: '#createdAt < :oneHourAgo AND attribute_not_exists(imageUrl)',
+            ExpressionAttributeNames: {
+                '#createdAt': 'createdAt',
+            },
+            ExpressionAttributeValues: {
+                ":oneHourAgo": { S: oneHourAgo },
+            },
+        });
+        
+        //Execute Scan Command to Retrieve Outdated Categories
+        const {Items} = await dynamoDBClient.send(scanCommand);
+        
+        //If No Items Found, Return Success Response
+        if(!Items || Items.length === 0){
+            return {
+                statusCode: 200,
+                body: JSON.stringify({msg: 'No outdated categories to clean up'}),
+            }
+        }
+        //Delete Each Outdated Product from DynamoDB
+        let deleteCount = 0;
+        //Iterate through the retrieved items and delete product from database
+        for(const item of Items){
+            //Create a delete command unique identifier for each product using fileName as the key
+            const deleteItemCommand = new DeleteItemCommand({
+                TableName: tableName,
+                Key: {fileName: {S: item.fileName.S}}
+            });
+            //Execute the delete command to remove the product from DynamoDB
+            await dynamoDBClient.send(deleteItemCommand);
+            deleteCount++;
+        }
+
+        // SEND SMS NOTIFICATION TO ADMIN ABOUT THE CLEANUP ACTION AFTER DELETING THE OUTDATED PRODUCTS
+        const snsMessage = `Product Cleanup Completed: Successfully cleaned up ${deleteCount} outdated products.`;
+        
+        await snsClient.send(new PublishCommand({
+            TopicArn: snsTopicArn,
+            Message: snsMessage,
+            Subject: 'Product Cleanup Notification',
+        }));
+        // Return Success Response with the Count of Deleted Products
+        return {
+            statusCode: 200,
+            body: JSON.stringify({msg: `Successfully cleaned up ${deleteCount} outdated products`}),
+        }
+    }catch(error){
+        console.error('Error cleaning up products:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({error: error.message}),
+        }
+    }
+};
+// END STEP 9
