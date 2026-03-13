@@ -20,6 +20,7 @@ exports.getAllProducts = async () => {
             productName: item.productName.S,
             category: item.category.S,
             productPrice: parseFloat(item.productPrice.N),
+            imageUrl: item.imageUrl ? item.imageUrl.S : null,
             description : item.description.S,
             quantity: parseInt(item.quantity.N),
             email: item.email.S,

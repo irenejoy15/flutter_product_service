@@ -119,4 +119,13 @@ functions:
       - httpApi:
           path: /check-product-image
           method: get
+# STEP 14
+  getAllProducts:
+    handler: handlers/getAllProducts.getAllProducts
+    events:
+      - httpApi:
+          path: /products
+          method: get
+
+# END STEP 14
 
