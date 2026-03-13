@@ -11,7 +11,7 @@ provider:
     authorizers:
       myCognitoAuth:
         identitySource: $request.header.Authorization
-        issueUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_W60RMNZ1Y
+        issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_W60RMNZ1Y
         audience: 
           - 75gmpfq557c7khpelrdmdgpgh6
   # END STEP 10
@@ -84,6 +84,10 @@ functions:
       - httpApi:
           path: /upload-url
           method: post
+          # STEP 11
+          authorizer: 
+            name: myCognitoAuth
+          # END STEP 11
 # END STEP 3
 # STEP 8
   updateProductImage:
