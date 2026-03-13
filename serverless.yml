@@ -6,6 +6,15 @@ service: productService
 provider:
   name: aws
   runtime: nodejs24.x
+  # STEP 10
+  httpApi:
+    authorizers:
+      myCognitoAuth:
+        identitySource: $request.header.Authorization
+        issueUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_W60RMNZ1Y
+        audience: 
+          - 75gmpfq557c7khpelrdmdgpgh6
+  # END STEP 10
   # "region" specifies the AWS region where your service will be deployed.
   # STEP 2
   environment:
