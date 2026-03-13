@@ -46,7 +46,7 @@ exports.cleanupProducts = async () => {
             //Create a delete command unique identifier for each product using fileName as the key
             const deleteItemCommand = new DeleteItemCommand({
                 TableName: tableName,
-                Key: {fileName: {S: item.fileName.S}}
+                Key: {id: {S: item.id.S}}
             });
             //Execute the delete command to remove the product from DynamoDB
             await dynamoDBClient.send(deleteItemCommand);

@@ -33,6 +33,9 @@ provider:
         - 'dynamodb:UpdateItem'
         - 'dynamodb:Scan'
         # END STEP 7
+        # STEP 12
+        - 'dynamodb:DeleteItem'
+        # END STEP 12
       Resource: arn:aws:dynamodb:us-east-1:660880134927:table/Products
   # STEP 5
     - Effect: 'Allow'
@@ -41,6 +44,12 @@ provider:
       Resource: arn:aws:s3:::products-images-irenejoy21-dev-12-new/*
   #  END STEP 5
   # END STEP 4 
+  # STEP 13 
+    - Effect: 'Allow'
+      Action:
+        - 'sns:Publish'
+      Resource: arn:aws:sns:us-east-1:660880134927:Product-cleanup-topic
+  # END STEP 13
   # Uncomment to easily set up a custom domain. Read the docs for more details:
   # https://www.serverless.com/framework/docs/providers/aws/guide/domains
   # domain: api.example.com
