@@ -34,7 +34,7 @@ exports.getAllProducts = async () => {
 
         return {
             statusCode: 200,
-            body: JSON.stringify(products),
+            body: JSON.stringify({products: products}),
         };
     }catch(error){
         console.error('Error retrieving products:', error);
