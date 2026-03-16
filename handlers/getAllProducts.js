@@ -6,6 +6,10 @@ exports.getAllProducts = async () => {
         const tableName = process.env.DYNAMODB_TABLE;
         const scanCommand = new ScanCommand({
             TableName: tableName,
+            FilterExpression: 'isApproved = :approved',
+            ExpressionAttributeValues: {
+                ':approved': { BOOL: true },
+            },
         });
         const {Items} = await dynamoDBClient.send(scanCommand);
         if(!Items || Items.length === 0){
