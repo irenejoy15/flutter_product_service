@@ -126,6 +126,11 @@ functions:
       - httpApi:
           path: /products
           method: get
-
 # END STEP 14
+  productByCategory:
+    handler: handlers/productByCategory.getProductsByCategory
+    events:
+      - httpApi:
+          path: /products/by-category
+          method: get
 
